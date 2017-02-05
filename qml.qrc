@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/BlackButtonBackground.qml</file>
+        <file>qml/BlackButtonStyle.qml</file>
+        <file>qml/BlackButtonRoundedStyle.qml</file>
+        <file>qml/BlackButtonRoundedBackground.qml</file>
+        <file>qml/ControlView.qml</file>
+        <file>qml/Projects.qml</file>
+        <file>qml/Test.qml</file>
+        <file>qml/TestForm.ui.qml</file>
+        <file>images/check.png</file>
+        <file>images/delete.png</file>
+        <file>images/plus-sign.png</file>
+        <file>images/arrow-left.png</file>
+        <file>images/arrow-right.png</file>
+        <file>fonts/OpenSans-Regular.ttf</file>
+    </qresource>
+</RCC>
