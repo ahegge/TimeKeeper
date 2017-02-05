@@ -3,6 +3,8 @@ import QtQuick.Controls 1.1
 
 ControlView {
     id: controlView
+    property string title: "value"
+    property int project_id
     Rectangle {
         height: root.height * 0.125
     }
@@ -10,7 +12,7 @@ ControlView {
     Button {
         width: stackView.width / 2
         height: root.height * 0.125 
-        text: "Add"
+        text: title + " " + project_id.toString()
         anchors.horizontalCenter: parent.horizontalCenter
 
         style: BlackButtonRoundedStyle {

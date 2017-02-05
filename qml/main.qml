@@ -39,11 +39,11 @@ ApplicationWindow {
         db = LocalStorage.openDatabaseSync("timekeeper", "0.1", "", 100000);
         try {
             db.transaction(function(tx){
-                tx.executeSql('CREATE TABLE IF NOT EXISTS projects (title TEXT)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS projects (id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT UNIQUE)');
                 var table  = tx.executeSql("SELECT * FROM projects");
                 // insert default values
                 if (table.rows.length == 0) {
-                    tx.executeSql('INSERT INTO projects VALUES(?)', ["Sample Project"]);
+                    tx.executeSql('INSERT INTO projects VALUES(null,?)', ["Sample Project"]);
                     console.log('projects filled');
                 };
             });
@@ -128,7 +128,6 @@ ApplicationWindow {
                                     db.transaction(function(tx) {
                                         var rs = tx.executeSql('INSERT INTO projects VALUES(?)', [ new_project]);
                                     });
-                                    project_list.append({title: new_project})
                                 }
                                 project_new.text = ""
                                 project_new.focus = false
@@ -205,7 +204,6 @@ ApplicationWindow {
                 onClicked: {
                     if (stackView.depth == 1) {
                         // Only push the control view if we haven't already pushed it...
-                        stackView.push({item: componentMap["Projects"]});
                         stackView.currentItem.forceActiveFocus();
                     }
                 }
@@ -217,7 +215,6 @@ ApplicationWindow {
         var projects = get_projects()
         for(var i = 0; i < projects.rows.length; i++) {
             var r = projects.rows.item(i).title
-            project_list.append({title: r})
         }
     }
 }
