@@ -15,5 +15,6 @@
         <file>images/arrow-left.png</file>
         <file>images/arrow-right.png</file>
         <file>fonts/OpenSans-Regular.ttf</file>
+        <file>qml/Tasks.qml</file>
     </qresource>
 </RCC>

@@ -39,12 +39,15 @@ ApplicationWindow {
         db = LocalStorage.openDatabaseSync("timekeeper", "0.1", "", 100000);
         try {
             db.transaction(function(tx){
-                tx.executeSql('CREATE TABLE IF NOT EXISTS projects (id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT UNIQUE)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS projects (id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,project_id INTEGER,title TEXT)');
                 var table  = tx.executeSql("SELECT * FROM projects");
                 // insert default values
                 if (table.rows.length == 0) {
-                    tx.executeSql('INSERT INTO projects VALUES(null,?)', ["Sample Project"]);
+                    var rs = tx.executeSql('INSERT INTO projects VALUES(null,?)', ["Sample Project"]);
                     console.log('projects filled');
+                    var rs = tx.executeSql('INSERT INTO tasks VALUES(null,?,?)', [1,"Sample Task"]);
+                    console.log('tasks filled')
                 };
             });
         } catch (err) {
@@ -61,11 +64,17 @@ ApplicationWindow {
         return rs;
     }
 
-    property Component projects: Projects {}
-
-    property var componentMap: {
-        "Projects": projects
+    function get_tasks(project_id) {
+        openDB();
+        var rs;
+        db.transaction(function(tx) {
+            rs = tx.executeSql('SELECT * FROM tasks WHERE project_id=?',[project_id]);
+        });
+        return rs;
+        console.log(rs.rows.length)
     }
+
+    property Component projects: Projects {}
 
     Text {
         id: textSingleton
@@ -81,7 +90,7 @@ ApplicationWindow {
         anchors.fill: parent
 
         Component {
-            id: listHeader
+            id: project_listHeader
 
             Rectangle {
                 id: project_buttons
@@ -125,9 +134,11 @@ ApplicationWindow {
                                 var new_project = text
                                 if (new_project != ""){
                                     openDB();
+                                    var rs
                                     db.transaction(function(tx) {
-                                        var rs = tx.executeSql('INSERT INTO projects VALUES(?)', [ new_project]);
+                                        rs = tx.executeSql('INSERT INTO projects VALUES(null,?)', [ new_project]);
                                     });
+                                    project_list.append({project_title: new_project,pid: parseInt(rs.insertId,10)})
                                 }
                                 project_new.text = ""
                                 project_new.focus = false
@@ -186,7 +197,7 @@ ApplicationWindow {
         }
 
         initialItem: ListView {
-            header: listHeader
+            header: project_listHeader
             model: ListModel {
                 id: project_list
             }
@@ -194,7 +205,7 @@ ApplicationWindow {
             delegate: Button {
                 width: stackView.width
                 height: root.height * 0.125
-                text: title
+                text: project_title
 
                 style: BlackButtonStyle {
                     fontColor: darkFontColor
@@ -202,8 +213,10 @@ ApplicationWindow {
                 }
 
                 onClicked: {
+
                     if (stackView.depth == 1) {
                         // Only push the control view if we haven't already pushed it...
+                        stackView.push(projects,{project_title: project_title,"project_ids": pid });
                         stackView.currentItem.forceActiveFocus();
                     }
                 }
@@ -211,10 +224,14 @@ ApplicationWindow {
         }
     }
     Component.onCompleted: {
+        console.log("triggered")
         openDB();
         var projects = get_projects()
         for(var i = 0; i < projects.rows.length; i++) {
             var r = projects.rows.item(i).title
+            var pid = projects.rows.item(i).id
+            project_list.append({project_title: r,pid: pid})
         }
     }
+
 }
