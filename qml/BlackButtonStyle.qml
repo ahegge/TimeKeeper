@@ -88,9 +88,11 @@ ButtonStyle {
                 verticalAlignment: Text.AlignVCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
+
         }
 
         Loader {
+            id: img
             active: rightAlignedIconSource.toString().length !== 0
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
@@ -101,6 +103,19 @@ ButtonStyle {
                 height: text.implicitHeight
                 fillMode: Image.PreserveAspectFit
                 source: rightAlignedIconSource
+            }
+        }
+        Loader {
+            active: rightAlignedIconSource.toString().length !== 0
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: img.left
+            anchors.rightMargin: textSingleton.implicitHeight
+
+            sourceComponent: Text {
+                text: control.time ? control.time : ""
+                color: fontColor
+                font.pixelSize: control.height * 0.25
+                font.family: openSans.name
             }
         }
     }

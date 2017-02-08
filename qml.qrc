@@ -16,5 +16,10 @@
         <file>images/arrow-right.png</file>
         <file>fonts/OpenSans-Regular.ttf</file>
         <file>qml/Tasks.qml</file>
+        <file>qml/BlackButtonMediaStyle.qml</file>
+        <file>images/pause.png</file>
+        <file>images/play.png</file>
+        <file>images/glyphicons-174-play.png</file>
+        <file>images/glyphicons-175-pause.png</file>
     </qresource>
 </RCC>
